@@ -1,7 +1,6 @@
 # Ignore files and folders created by VSCode
 
 **/.cache
-**/.gitconfig
 **/.cortex-debug
 **/.vscode-server
 **/.bash_history
@@ -10,9 +9,6 @@
 **/.local/
 **/.viminfo
 **/.devcontainer/.*Marker
-
-# Ignore any .gitconfig
-**/.gitconfig*
 
 # Ignore secrets
 **/secrets/*

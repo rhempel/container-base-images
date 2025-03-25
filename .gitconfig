@@ -1,0 +1,28 @@
+# --------------------------------------------------------
+# Custom .gitconfig that can be saved and versioned
+#
+# Normally, your --local git configuration lives in
+# the .git folder of your repo, and this folder  . in a git repo
+#
+# NOTE: This .gitconfig is NOT automatically included after you
+#       check out a repo for the first time.
+#
+# NOTE: The double quotes are not needed unless there are spaces
+#       in the path name, and that's already a bad idea.
+#
+# NOTE: Do NOT use single quotes around strings because they
+#       are illegal .gitconfig syntax.
+#
+# After checking out a repo for the fist time, you need to run:
+#
+#    git config --local include.path "../.gitconfig"
+#
+# To have your customizations included automatically for every git
+# command.
+#
+# You can verify that your customizations are included by doing:
+#
+#    git config --includes --list
+#
+[url "git@github.com:"]
+	insteadOf = "https://github.com/"
