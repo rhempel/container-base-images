@@ -20,10 +20,9 @@ The following terms are useful to keep in mind:
 | Term         | Description |
 | -            | -           |
 | Image        | The template for a container - you can re-use the same image for multiple containers
-| Volume       | A file system that can be attached to a running container
 | Container    | An instance of an image set up for a specific task
 | Devcontainer | A special type of container that VSCode can interact with from the host machine
-
+| Volume       | A file system that can be attached to a running container
 
 :exclamation: If you are using Podman, then you will need to make a
 few adjustments to be able to use the Docker support plugin and to
@@ -61,7 +60,7 @@ of Docker. They even went so far as to be able to read the Dockerfile format.
 | Environment | Version | Notes |
 | -            | - | - |
 | Docker       | 4.32.0+ | The traditional `build` command is now legacy, so we will be using `buildx` instead. If you need more control over the process, refer to the [Docker CLI reference for `buildx`][Docker buildx].
-| Podman       | 1.16.2+ | Podman uses `image` instead of `buildx` - the parameters are otherwise the same. [Podman CLI reference for `image`][Podman image].
+| Podman       | 1.16.2+ | Podman also supports `buildx` - but not all of the features from Docker are available. [Podman CLI reference for `build`][Podman build].
 
 :exclamation: In each of the code sections below, you will see two command
 lines, one for the Docker environment, and one for Podman - choose
@@ -84,7 +83,7 @@ cd path/to/ubuntu-xx.yy-embedded
 # Choose podman or docker depending on your containerization tool
 #
 docker buildx build -f Dockerfile -t ubuntu-xx.yy-embedded .
-podman image  build -f Dockerfile -t ubuntu-xx.yy-embedded .
+podman buildx build -f Dockerfile -t ubuntu-xx.yy-embedded .
 
 NOTE: Don't forget the trailing "."
 ```
@@ -96,7 +95,7 @@ lives, you can just do this:
 # Choose podman or docker depending on your containerization tool
 #
 docker buildx build -t ubuntu-xx.yy-embedded path/to/ubuntu-xx.yy-embedded
-podman image  build -t ubuntu-xx.yy-embedded path/to/ubuntu-xx.yy-embedded
+podman buildx build -t ubuntu-xx.yy-embedded path/to/ubuntu-xx.yy-embedded
 ```
 
 Depending on network and computer speed, the build time will vary. On my
@@ -341,7 +340,7 @@ you. One way around this is to force a build without the cache:
 # Choose podman or docker depending on your containerization tool
 #
 docker buildx build --no-cache -t ubuntu-xx.yy-embedded path/to/ubuntu-xx.yy-embedded-docker
-podman image  build --no-cache -t ubuntu-xx.yy-embedded path/to/ubuntu-xx.yy-embedded-docker
+podman buildx build --no-cache -t ubuntu-xx.yy-embedded path/to/ubuntu-xx.yy-embedded-docker
 ```
 
 As an absolute last resort, you can consider clearing out your entire
@@ -349,11 +348,11 @@ Docker cache - this can actually free up quite a bit of disk space, but you
 will slow down any subsequent container builds until the cache is refilled.
 
 ```
-# Choose podman or docker depending on your containerization tool
-#
 docker buildx prune -f
-podman image  prune -f
 ```
+
+Podman users will need to manage unused images, containers, and volumes either
+with the GUI or command lines.
 
 ## More Detailed Information
 
@@ -363,7 +362,7 @@ https://medium.com/@guillem.riera/making-visual-studio-code-devcontainer-work-pr
 [Docker]: https://docs.docker.com
 [Podman]: https://podman.io/
 [Docker buildx]: https://docs.docker.com/reference/cli/docker/buildx/build
-[Podman image]: https://docs.podman.io/en/latest/markdown/podman-build.1.html
+[Podman build]: https://docs.podman.io/en/latest/markdown/podman-build.1.html
 [Docker tag]: https://docs.docker.com/reference/cli/docker/image/tag
 [Podman tag]: https://docs.podman.io/en/latest/markdown/podman-tag.1.html
 [Docker image save]: https://docs.docker.com/reference/cli/docker/image/save
