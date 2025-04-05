@@ -2,7 +2,7 @@
 # Custom .gitconfig that can be saved and versioned
 #
 # Normally, your --local git configuration lives in
-# the .git folder of your repo, and this folder  . in a git repo
+# the .git folder of your repo
 #
 # NOTE: This .gitconfig is NOT automatically included after you
 #       check out a repo for the first time.
@@ -17,7 +17,7 @@
 #
 #    git config --local include.path "../.gitconfig"
 #
-# To have your customizations included automatically for every git
+# to have your customizations included automatically for every git
 # command.
 #
 # You can verify that your customizations are included by doing:
