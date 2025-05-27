@@ -50,7 +50,7 @@ run:
 ```
 podman machine stop
 podman machine set --rootful=false
-podman machine set --user-mode-networking=false
+podman machine set --user-mode-networking=true
 podman machine start
 ```
 
@@ -321,6 +321,62 @@ podman machine start
 
 Thanks to [StackOverflow user Anton][StackOverflow Anton] for
 [this StackOverflow solution for Podman host networking support][podman host networking].
+
+## Verifying Host <-> Container Networking
+
+The simplest way to verify if the Host <-> Container networking is functional
+is to set up a web server on the host, and try to `wget` from the container.
+
+On your host machine type the following in a terminal:
+
+```
+python -m http.server
+```
+
+This will start a server that binds to ALL interfaces at port 8000.
+
+Now start your container, and open up a terminal in the container. There is
+usually a menu in your container GUI that lets you open a terminal in a
+running container.
+
+To see the hostnames your container supports:
+
+```
+yourUser@083312b7009d:/$ cat /etc/hosts
+172.17.32.1     host.gdb.gateway
+...
+172.17.32.1     host.containers.internal host.docker.internal
+yourUser@083312b7009d:/$
+```
+
+Recall that you set up your host IP address in the default machine in
+a previous step, and here it is again. You should now be able to
+query the webserver we left running on the host in ANY of these ways:
+
+```
+wget 172.17.32.1:8000
+wget host.gdb.gateway:8000
+wget host.containers.internal:8000
+wget host.docker.internal:8000
+```
+
+The response looks like this if Host <-> COntainer networking is
+functional:
+
+```
+yourUser@083312b7009d:~/projects$ wget 172.17.32.1:8000
+--2025-05-27 22:39:41--  http://172.17.32.1:8000/
+Connecting to 172.17.32.1:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 654 [text/html]
+Saving to: ‘index.html’
+
+index.html                         100%[================================================================>]     654  --.-KB/s    in 0s      
+
+2025-05-27 22:39:41 (72.2 MB/s) - ‘index.html’ saved [654/654]
+
+yourUser@083312b7009d:~/projects$ 
+```
 
 ## Troubleshooting Build Issues
 
