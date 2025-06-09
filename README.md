@@ -266,6 +266,47 @@ Restart VSCode and now your Remote Explorer plugin will call `podman`
 to show you all of your container assets, and the DevContiner plugin
 will use `podman` to start, stop, and rebuild containers.
 
+### Podman Container -> Windows File System Metadata
+
+Mounting a Windows filesystem in a container is a great way to share files
+between the host and the container, but you will not be able to change the
+file permissions on the Windows host files from the container. This makes
+sharing things like your user's `.ssh` directory problematic because it
+will have the wrong permisisons by default.
+
+To allow the Windows filesystem permisison metadata to be changed by the
+host we need to edit the `/etc/wsl.conf` file on the machine that the
+container management system is running on.
+
+You can find your default WSL container machine from the Windows command
+promopt with:
+
+```
+C:\Users\YourUserID> wsl --list
+
+Windows Subsystem for Linux Distributions:
+podman-machine-default (Default)
+podman-net-usermode
+```
+
+Start the WSL machine, if it's not already running, open a terminal in the
+machine and add the following lines to `/etc/wsl.conf`:
+
+```
+[automount]
+options = metadata
+```
+
+If there is already an `[automount]` section then just add the `options = metadata`
+line, and if there is already an `options` key, then make sure `metadata` is in
+the comma separated list of options.
+
+You must restart your WSL machine for the changes to take effect.
+
+You can always refer to the [WSL Configuration Reference Page][WSL Configuration] for
+more details.
+
+
 ### Podman Container -> Host Networking in Windows
 
 The Podman network name resolution works differently than Docker, so
@@ -287,7 +328,7 @@ wsl --distribution podman-machine-default
 ```
 
 and edit (using `sudo vi`) the `/etc/containers/containers.conf` file
-to add this line in the `[continers]` section. This will allow
+to add this line in the `[containers]` section. This will allow
 `host.containers.internal` to resolve to the IP address that the
 host presents to `podman-machine-default` - of course your IP
 address will be different.
@@ -456,6 +497,7 @@ https://medium.com/@guillem.riera/making-visual-studio-code-devcontainer-work-pr
 [VSCode DevContainer]: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 [VSCode Docker]: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker
 [podman host networking]: https://stackoverflow.com/questions/79098571/podman-container-cannot-connect-to-windows-host
+[WSL Configuration]: https://learn.microsoft.com/en-us/windows/wsl/wsl-config
 [StackOverflow Anton]: https://stackoverflow.com/users/5788429/anton
 [OpenOCD]: https://openocd.org/
 [What is Podman]: https://www.redhat.com/en/topics/containers/what-is-podman#why-podman
